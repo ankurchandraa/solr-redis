@@ -27,11 +27,7 @@ import com.sematext.solr.redis.command.ZRevrangeByScore;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queries.TermsQuery;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.*;
 import org.apache.lucene.util.BytesRef;
 import org.apache.solr.common.params.SolrParams;
 import org.apache.solr.request.SolrQueryRequest;
@@ -45,7 +41,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.lucene.search.BoostQuery;
+
 import org.apache.solr.common.util.Pair;
 
 /**
@@ -66,7 +62,7 @@ final class RedisQParser extends QParser {
   private static final Map<String, Command<?>> commands;
 
   static {
-    commands = new HashMap<>();
+    commands = new HashMap();
     commands.put("SDIFF", new SDiff());
     commands.put("SINTER", new SInter());
     commands.put("SMEMBERS", new SMembers());
@@ -162,7 +158,7 @@ final class RedisQParser extends QParser {
   @Override
   public Query parse() throws SyntaxError {
     final String fieldName = localParams.get(QueryParsing.V);
-    final List<Pair<BytesRef, Float>> queryTerms = new ArrayList<>();
+    final List<Pair<BytesRef, Float>> queryTerms = new ArrayList();
     int booleanClausesTotal = 0;
     boolean shouldUseTermsQuery = (this.operator == BooleanClause.Occur.SHOULD) && ignoreScore;
     Float score = null;
@@ -179,7 +175,12 @@ final class RedisQParser extends QParser {
             continue;
           }
 
-          final Float newScore = entry.getValue();
+          //Overriding negative score to 0.0f for lucene 8.0 doesn't support -ve scores
+          Float newScore = entry.getValue();
+          if (entry.getValue() < 0) {
+            newScore = 1f;
+          }
+
           if (score != null && newScore != score && !ignoreScore) {
             shouldUseTermsQuery = false;
           }
@@ -196,13 +197,13 @@ final class RedisQParser extends QParser {
               while (tokenStream.incrementToken()) {
                 log.trace("Taking {} token {} with score {} from query string from {} for field: {}", ++counter,
                     charAttribute, score, termString, fieldName);
-                queryTerms.add(new Pair<>(new BytesRef(charAttribute), score));
+                queryTerms.add(new Pair(new BytesRef(charAttribute), score));
                 ++booleanClausesTotal;
               }
               tokenStream.end();
             }
           } else {
-            queryTerms.add(new Pair<>(new BytesRef(termString), score));
+            queryTerms.add(new Pair(new BytesRef(termString), score));
             ++booleanClausesTotal;
           }
         } catch (final IOException ex) {
@@ -213,14 +214,14 @@ final class RedisQParser extends QParser {
 
     Query termsQuery = null;
     if (shouldUseTermsQuery) {
-      final List<BytesRef> terms = new ArrayList<>(queryTerms.size());
+      final List<BytesRef> terms = new ArrayList(queryTerms.size());
       for (Pair<BytesRef, Float> pair : queryTerms) {
         terms.add(pair.first());
       }
-      termsQuery = new TermsQuery(fieldName, terms);
+      termsQuery = new TermInSetQuery(fieldName, terms);
     } else {
       final BooleanQuery.Builder booleanQueryBuilder = new BooleanQuery.Builder();
-      booleanQueryBuilder.setDisableCoord(true);
+      //booleanQueryBuilder.setDisableCoord(true);
       for (Pair<BytesRef, Float> pair : queryTerms) {
         addTermToQuery(booleanQueryBuilder, fieldName, pair.first(), pair.second());
       }

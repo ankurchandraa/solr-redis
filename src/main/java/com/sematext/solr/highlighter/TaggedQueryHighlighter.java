@@ -59,10 +59,10 @@ public class TaggedQueryHighlighter extends DefaultSolrHighlighter {
           final SolrQueryRequest req, final String[] defaultFields)
       throws IOException {
 
-    final Collection<TaggedQuery> taggedQueries = new ArrayList<>();
-    final List<Query> otherQueries = new ArrayList<>();
+    final Collection<TaggedQuery> taggedQueries = new ArrayList();
+    final List<Query> otherQueries = new ArrayList();
     try {
-      final List<Query> extractedQueries = new ArrayList<>();
+      final List<Query> extractedQueries = new ArrayList();
       QueryExtractor.extractQuery(query, extractedQueries);
       for (final Query extractedQuery : extractedQueries) {
         if (extractedQuery instanceof TaggedQuery) {
@@ -78,17 +78,17 @@ public class TaggedQueryHighlighter extends DefaultSolrHighlighter {
       return super.doHighlighting(docs, query, req, defaultFields);
     } else {
       logger.debug("Collecting highlights for Running default highlighter. No tagged queries are used in main query.");
-      final Map<String, SimpleOrderedMap> results = new HashMap<>();
+      final Map<String, SimpleOrderedMap> results = new HashMap();
       results.put(MAIN_HIGHLIGHT, (SimpleOrderedMap) super.doHighlighting(docs, query, req, defaultFields));
 
-      List<String> fieldsNameList = new ArrayList<>();
+      List<String> fieldsNameList = new ArrayList();
       if (req.getParams().getParams(HighlightParams.FIELDS).length > 0) {
         fieldsNameList = Arrays.asList(SolrPluginUtils.split(req.getParams().getParams(HighlightParams.FIELDS)[0]));
       }
 
-      final Set<String> originalFields = new HashSet<>(fieldsNameList);
+      final Set<String> originalFields = new HashSet(fieldsNameList);
       for (final TaggedQuery taggedQuery : taggedQueries) {
-        final Set<String> fields = new HashSet<>();
+        final Set<String> fields = new HashSet();
         QueryExtractor.extractFields(taggedQuery, fields);
         final ModifiableSolrParams params = new ModifiableSolrParams(req.getParams());
 
@@ -120,7 +120,7 @@ public class TaggedQueryHighlighter extends DefaultSolrHighlighter {
   private boolean containsField(final String queryTag, final Set<String> originalFields,
           final Collection<String> subFields) {
     final boolean containsTag = originalFields.contains(queryTag);
-    final Collection<String> tmpOriginalField = new HashSet<>(originalFields);
+    final Collection<String> tmpOriginalField = new HashSet(originalFields);
     tmpOriginalField.retainAll(subFields);
     return containsTag || !tmpOriginalField.isEmpty();
   }
@@ -169,7 +169,7 @@ public class TaggedQueryHighlighter extends DefaultSolrHighlighter {
     final SimpleOrderedMap subResult = (SimpleOrderedMap) subResultObject;
     List<String> fieldResult;
     if (subResult.get(fieldName) == null) {
-      fieldResult = new ArrayList<>();
+      fieldResult = new ArrayList();
       subResult.add(fieldName, fieldResult);
     }
     fieldResult = (List<String>) subResult.get(fieldName);

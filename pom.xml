@@ -62,7 +62,7 @@
                     <plugin>
                         <groupId>org.apache.felix</groupId>
                         <artifactId>maven-bundle-plugin</artifactId>
-                        <version>2.4.0</version>
+                        <version>5.1.1</version>
                         <configuration>
                             <instructions>
                                 <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
@@ -73,7 +73,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.5</version>
+                        <version>1.6</version>
                         <executions>
                             <execution>
                                 <phase>package</phase>
@@ -91,7 +91,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <solr.version>6.2.0</solr.version>
+        <solr.version>8.6.0</solr.version>
         <junit.version>4.12</junit.version>
         <gson.version>2.5</gson.version>
         <mockito.version>1.10.19</mockito.version>
@@ -186,7 +186,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.8.1</version>
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
@@ -196,7 +196,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9.1</version>
+                <version>3.2.0</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -222,7 +222,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>1.5</version>
+                <version>3.2.4</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -252,7 +252,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.15</version>
+                <version>3.0.0-M5</version>
                 <configuration>
                     <skipTests>${skip.unit.tests}</skipTests>
                     <excludes>
@@ -265,7 +265,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.17</version>
+                <version>3.0.0-M5</version>
                 <executions>
                     <execution>
                         <id>integration-tests</id>
@@ -283,7 +283,7 @@
             <plugin>
                 <groupId>ru.trylogic.maven.plugins</groupId>
                 <artifactId>redis-maven-plugin</artifactId>
-                <version>1.4.5</version>
+                <version>1.4.6</version>
                 <configuration>
                     <forked>true</forked>
                 </configuration>
@@ -308,7 +308,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.13</version>
+                <version>3.1.1</version>
                 <configuration>
                     <configLocation>config/checkstyle.xml</configLocation>
                     <suppressionsLocation>config/checkstyle-suppressions.xml</suppressionsLocation>

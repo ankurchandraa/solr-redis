@@ -38,7 +38,7 @@ public class TestRetryingCommandHandler {
   @Mock
   private SolrParams localParams;
 
-  private final Map<String, Float> expectedResult = new HashMap<>();
+  private final Map<String, Float> expectedResult = new HashMap();
 
   @Before
   public void setUp() {

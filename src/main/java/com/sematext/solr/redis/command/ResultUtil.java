@@ -20,7 +20,7 @@ final class ResultUtil {
 
   static Map<String, Float> stringIteratorToMap(final Iterable<String> collection, final Float value,
     final Scorer scorer) {
-    final Map<String, Float> map = new HashMap<>();
+    final Map<String, Float> map = new HashMap();
     Float score = value;
 
     for (final String entry : collection) {
@@ -32,7 +32,7 @@ final class ResultUtil {
   }
 
   static Map<String, Float> tupleIteratorToMap(final Iterable<Tuple> set) {
-    final Map<String, Float> map = new HashMap<>();
+    final Map<String, Float> map = new HashMap();
 
     for (final Tuple tuple : set) {
       map.put(tuple.getElement(), (float) tuple.getScore());

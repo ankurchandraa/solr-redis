@@ -50,7 +50,7 @@ abstract class ScriptingCommand implements Command<ScriptingCommands> {
   }
 
   private Map<String, Float> returnHash(final Iterable result) {
-    final Map<String, Float> hash = new HashMap<>();
+    final Map<String, Float> hash = new HashMap();
 
     int a = 0;
     String hashKey = null;

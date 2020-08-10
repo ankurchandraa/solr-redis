@@ -66,7 +66,7 @@ final class ParamUtil {
 
   static String[] getStringByPrefix(final SolrParams params, final CharSequence prefix) {
     final Iterator<String> it = params.getParameterNamesIterator();
-    final ArrayList<String> keyList = new ArrayList<>();
+    final ArrayList<String> keyList = new ArrayList();
 
     while (it != null && it.hasNext()) {
       final String paramKey = it.next();
